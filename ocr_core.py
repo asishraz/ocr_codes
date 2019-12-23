@@ -18,10 +18,5 @@ def ocr_core(sample):
 
 print(ocr_core('random_image.jpg'))
 
-
-
 '''
-from PIL import Image
-import pytesseract 
-
-'''
+basic understanding for the OCR recognition'
