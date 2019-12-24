@@ -1,4 +1,5 @@
 import sys 
+import os
 # inp =open(r'C:\Users\Asish.Asish\Desktop\pdf_extraction\Member_1\56B_member_1\sample.pdf','r') 
 # out =open(r'C:\Users\Asish.Asish\Desktop\pdf_extraction\Member_1\56B_member_1\sample_2.pdf','w') 
 # n=inp.read() 
@@ -43,7 +44,7 @@ pseudo code
 #             print('FileName:'+m+' ,Folder: '+f)
 
 '''
-import os
+
 def take_a_file(file_name):
 	full_path = os.path.abspath(file_name)
 	
