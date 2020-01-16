@@ -1,3 +1,47 @@
 OCR with Tesseract:
 
-A 2-D image
+A 2-D image either in machine-printed or hand-written text can be converted to Machine Readable Text using OCR(optical character recognition)
+
+For OCR, there are sub-process:
+1. Pre-processing of image
+2. Text localisation
+3. Character segmentation
+4. Character recognition
+5. post processing
+
+Aim:
+To identify and capture all unique words using different languages from Written Text Characters
+
+Early Version Of OCR:(limitations)
+
+1. Limited Type Fonts
+2. Can't read many non-proportional typewriter fonts
+
+
+Next-Version of OCR: (Intro to DEEP LEARNING)
+Overcome with all the above mentioned disadvantages
+
+Q. How?
+A. With the help of deep models and huge dataset publicly, the accuracy has been achieved.
+
+Limitations:
+1. Text in unconstrained Environment 
+2. Geometrical Distortion text
+3. Complex background
+4. Diverse Fonts
+
+
+Add-ons:
+Building license plate readons
+Digitizing invoices
+digitizing menus
+digitizing ID cards
+
+OCR software or tools:
+1. Tesseracct
+2. OCRopus
+3. Ocular
+4. SwiftOCR
+
+
+1. Tesseract 
