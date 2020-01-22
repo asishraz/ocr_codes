@@ -1,4 +1,4 @@
-OCR with Tesseract:
+﻿OCR with Tesseract:
 
 A 2-D image either in machine-printed or hand-written text can be converted to Machine Readable Text using OCR(optical character recognition)
 
@@ -44,4 +44,3 @@ OCR software or tools:
 4. SwiftOCR
 
 
-1. Tesseract 
