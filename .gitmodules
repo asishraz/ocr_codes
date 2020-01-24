@@ -1,3 +1,6 @@
 [submodule "ocr_server"]
 	path = ocr_server
 	url = https://github.com/asishraz/ocr_codes.git
+[submodule "opencv_understanding"]
+	path = opencv_understanding
+	url = https://github.com/asishraz/ocr_codes.git
