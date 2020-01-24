@@ -1,0 +1,3 @@
+[submodule "ocr_server"]
+	path = ocr_server
+	url = https://github.com/asishraz/ocr_codes.git

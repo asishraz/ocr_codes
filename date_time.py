@@ -38,7 +38,7 @@ def string_taken(str1, str2):
 	year_taken_1 = str1[4:]
 	year_taken_2 = str2[4:]
 	print("year: " +year_taken_1)
-	iterate_1 = iter(str1[0:4])
+	iterate_1 = iter(str1[0:4]) 
 	iterate_2 = iter(str2[0:4])
 	slash_join_1 = '/'.join(a+b for a,b in zip(iterate_1,iterate_1))
 	slash_join_2 = '/'.join(a+b for a,b in zip(iterate_2,iterate_2))
