@@ -1,42 +1,72 @@
-
 import pandas as pd
 import re
 import os
 import datetime
 import shutil
 
+# from sqlparse.filters import output
+
+
 def customDataCleaningForIR56B(workflow_Excel_path, cwd):
-
     output_final = pd.read_excel(workflow_Excel_path, sheet_name=3)
-    output_final.rename(columns={"NOTIFICATION":"Nature of the form (Original/Revised/Additional)","Employer's File No.:": "Employer's File No","Name of Employer:": "Name of Employer","H.K. Identity Card Number:":'Taxpayer HKID card',"Surname of Employee or Pensioner:": 'Taxpayer Last Name', "Salaries Tax Paid by Employer":'Salaries Tax Paid by Employer',
-                                 'Given name in Full:':'Taxpayer Given name in Full',"Spouse's H.K. Identity Card Number:":"Spouse HKID card", "If married, full name of spouse:":"Spouse Name","Residential address_person:":'Residential address',
-                                 "Capacity in which employed:":'Capacity',"(a) Address 1:":"Address 1", "Period of employment for the year from 1 April 2018 to 31 March 2019:": "Period of employment",
-                                 "by a non-Hong Kong company: (0=No, 1=Yes)":'Whether the employee was wholly or partly paid either in Hong Kong or elsewhere','Period Provided:':'Period 1',
-                                 "Passport Number and place of issue:":'Taxpayer Passport Number and place of issue',"Marital status (1=Single/Widowed/Divorced/Living Apart, 2=Married):":"Marital status",
-                                 'Rent paid to Landlord by Employer': 'Address 1 Rent paid to Landlord by Employer',"Sex (M=Male, F=Female):":'Taxpayer Gender',"Any Other Rewards Allowances or Perquisites":'Any Other Rewards or Allowances or Perquisites',
-                                 'Rent paid to Landlord by Employee:': 'Address 1 Rent paid to Landlord by Employee','Postal Address (if different from 7 above):':"Postal Address","If part time, the name of his/her principal employer (if known):":"Part time employer name",
-                                 'Rent Refunded to Employee by Employer': 'Address 1 Rent Refunded to Employee by Employer','Back pay, Payment in Lieu of Notice, Terminal Awards or Gratuities':'Back Pay, Payment in Lieu of Notice, Terminal Awards or Gratuities',
-                                 'Rent Paid to Employer by Employee': 'Address 1 Rent Paid to Employer by Employee','Particulars of Place of Residence provided: (0=Not provided, 1=Provided)':'Particulars of Place of Residence provided:',
-                                 'Nature1: Cash / housing allowance':"Nature 1","Spouse's Passport Number and place of issue (if known):":"Passport Number and place of issue:",
-                                 "Nature2: Other allowance / award":"Nature 2","(b) Address 2:":"Address Place of residence provided 2","Director's Fees":"Director's Fee",
+    output_final.rename(columns={"NOTIFICATION": "Nature of the form (Original/Revised/Additional)",
+                                 "Employer's File No.:": "Employer's File No", "Name of Employer:": "Name of Employer",
+                                 "H.K. Identity Card Number:": 'Taxpayer HKID card',
+                                 "Surname of Employee or Pensioner:": 'Taxpayer Last Name',
+                                 "Salaries Tax Paid by Employer": 'Salaries Tax Paid by Employer',
+                                 'Given name in Full:': 'Taxpayer Given name in Full',
+                                 "If married, full name of spouse:": "Spouse Name",
+                                 "Capacity in which employed:": 'Capacity', "(a) Address 1:": "Address 1",
+                                 "Period of employment for the year from 1 April 2018 to 31 March 2019:": "Period of employment",
+
+                                 #asish code #&(*&*&*&&*&(*&*&*&]]]]]
+                                 "by an overseas company (0=No, 1=Yes)": "by a non-Hong Kong company: (0=No, 1=Yes)",
+
+
+
+                                 #till previous line
+
+
+                                 "by a non-Hong Kong company: (0=No, 1=Yes)": 'Whether the employee was wholly or partly paid either in Hong Kong or elsewhere',
+                                 'Period Provided:': 'Period 1',
+                                 "Passport Number and place of issue:": 'Taxpayer Passport Number and place of issue',
+                                 "Marital status ( 1=Single/Widowed/Divorced/Living Apart, 2=Married):" : "Marital status",
+                                 "Marital status (1=Single/Widowed/Divorced/Living Apart, 2=Married):": "Marital status",
+                                 'Rent paid to Landlord by Employer': 'Address 1 Rent paid to Landlord by Employer',
+                                 "Sex (M=Male, F=Female):": 'Taxpayer Gender',
+                                 "Residential address_person:": 'Residential address',
+                                 "Any Other Rewards Allowances or Perquisites": 'Any Other Rewards or Allowances or Perquisites',
+                                 'Rent paid to Landlord by Employee:': 'Address 1 Rent paid to Landlord by Employee',
+                                 'Postal Address (if different from 7 above):': "Postal Address",
+                                 "If part time, the name of his/her principal employer (if known):": "Part time employer name",
+                                 'Rent Refunded to Employee by Employer': 'Address 1 Rent Refunded to Employee by Employer',
+                                 'Back pay, Payment in Lieu of Notice, Terminal Awards or Gratuities': 'Back Pay, Payment in Lieu of Notice, Terminal Awards or Gratuities',
+                                 'Rent Paid to Employer by Employee': 'Address 1 Rent Paid to Employer by Employee',
+                                 'Particulars of Place of Residence provided: (0=Not provided, 1=Provided)': 'Particulars of Place of Residence provided:',
+                                 'Nature1: Cash / housing allowance': "Nature 1",
+                                 "Spouse's Passport Number and place of issue (if known):": "Passport Number and place of issue:",
+                                 "Nature2: Other allowance / award": "Nature 2",
+                                 "(b) Address 2:": "Address Place of residence provided 2",
+                                 "Director's Fees": "Director's Fee",
                                  "Nature3: Foreign Individual Income Tax paid by Employer": "Nature 3",
-                                 '(a) Address 1:':'Address Place of residence provided 1',
-                                 'Nature:':'Nature_1',"Total:":"Total income",
-                                 "Rent paid to Landlord by Employer:":"Rent paid by employer 1",
-                                 "Rent paid to Landlord by Employee:":"Rent paid by employee 1",
-                                 "Rent Refunded to Employee by Employer:":"Rent refunded to employee by employer 1",
-                                 "Rent Paid to Employer by Employee:":"Rent paid by employee to employer 1",
-                                 'Name of the non-Hong Kong company:':'Name of the non-Hong Kong company',
-                                 "Address:" :"Non-Hong Kong company Address",
-                                 "Amount (if known) (This amount must also be included in item 11):":"Amount paid overseas non-Hong Kong company",
-                                 "Remarks:":"Remarks"
+                                 '(a) Address 1:': 'Address Place of residence provided 1',
+                                 'Nature:': 'Nature_1', "Total:": "Total income",
+                                 "Rent paid to Landlord by Employer:": "Rent paid by employer 1",
+                                 "Rent paid to Landlord by Employee:": "Rent paid by employee 1",
+                                 "Rent Refunded to Employee by Employer:": "Rent refunded to employee by employer 1",
+                                 "Rent Paid to Employer by Employee:": "Rent paid by employee to employer 1",
+                                 'Name of the non-Hong Kong company:': 'Name of the non-Hong Kong company',
+                                 "Address:": "Non-Hong Kong company Address",
+                                 "Amount (if known) (This amount must also be included in item 11):": "Amount paid overseas non-Hong Kong company",
+                                 "Remarks:": "Remarks"
 
-
-                                                             }, inplace=True)
+                                 }, inplace=True)
+    print(output_final.columns.tolist())
 
     output_final["Type of the Form (56B/56G/56F/56M)"] = "56B"
 
     form_type = output_final["Nature of the form (Original/Revised/Additional)"].to_string()
+
     if form_type is not None:
         try:
             output_final["Nature of the form (Original/Revised/Additional)"] = output_final[
@@ -52,6 +82,7 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
 
     output_final["Employer's File No"] = output_final["Employer's File No"].apply(
         lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
+
     output_final["Taxpayer Given name in Full"] = output_final["Taxpayer Given name in Full"].apply(
         lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
 
@@ -65,11 +96,9 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
         "Taxpayer Passport Number and place of issue"].apply(
         lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
 
-
     tax_gender = output_final["Taxpayer Gender"].apply(
         lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(' '))
-    output_final["Taxpayer Gender"]= tax_gender.apply(lambda x: str(x).replace("*", ""))
-
+    output_final["Taxpayer Gender"] = tax_gender.apply(lambda x: str(x).replace("*", ""))
 
     output_final["Marital status"] = output_final["Marital status"].apply(
         lambda x: str(x).replace("*", "").lstrip())
@@ -84,32 +113,93 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
     output_final["Capacity"] = output_final["Capacity"].apply(
         lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
     output_final["Part time employer name"] = ''
-    output_final["Expected cessation date"] =''
+    output_final["Expected cessation date"] = ''
+    #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    #asish's code
+    # output_final["Spouse's H.K. Identity Card Number"] = output_final["Spouse's H.K. Identity Card Number:"].apply(
+    #     lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
+    # output_final["Spouse's H.K. Identity Card number:"] = output_final["Spouse's H.K. Identity Card number:"].apply(
+        # lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
+    output_final["Spouse's H.K. Identity Card number:"] = ""
+    print("&&&&&&***********&&&&&&&&&&&&&&")
+    print(output_final["Spouse's H.K. Identity Card number:"])
 
+    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    output_final["Spouse HKID card"] = output_final["Spouse HKID card"].apply(
-        lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
     output_final["Passport Number and place of issue:"] = output_final["Passport Number and place of issue:"].apply(
         lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
     output_final["Spouse Name"] = output_final["Spouse Name"].apply(
         lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
 
     output_final["Reason for cessation"] = ''
-    sal_peroid = output_final["Period of employment"]
+    sal_period = output_final["Period of employment"]
+#######################################################################################################
+# new logic added here: ############################################################################
 
-    try:
+    for salary_period in sal_period:
+        if str(salary_period) == 'nan':
+            p_val = output_final["Salary/Wages"].apply(lambda x: str(x).split()[0]) + " to " + output_final["Salary/Wages"].apply(lambda x: str(x).split()[2])
+            output_final['Period of employment'] = output_final['Period of employment'].fillna(p_val)
+            # print("*********Type**************", type(output_final["Period of employment"]))
+            #function for checking date and time format
+            start_date = output_final["Period of employment"].apply(lambda x: (x).split()[0])
+            end_date = output_final["Period of employment"].apply(lambda x: (x).split()[2])
+            start_date = str(start_date).replace(' ', '')
+            end_date = str(end_date).replace(' ', '')
+            start_date = "".join(re.split("[^0-9]*", start_date))
+            end_date = "".join(re.split("[^0-9]*", end_date))
+            # start_date.replace(" ", "")
+            # end_date.replace(" ", "")
 
-        for salary_peroid in sal_peroid:
-            if str(salary_peroid) == 'nan':
+            if len(start_date and end_date) > 8:
+                output_final["Period of employment"] = string_taken(start_date[1:], end_date[1:])
+                # print("Result",output_final["Period of employment"])
 
-                p_val = output_final["Salary/Wages"].apply(lambda x: str(x).split()[0]) + " to " + output_final[
-                    "Salary/Wages"].apply(lambda x: str(x).split()[2])
-                output_final['Period of employment'] = output_final[
-                    'Period of employment'].fillna(p_val)
+            elif len(start_date and end_date) == 8:
+                output_final["Period of employment"] = string_taken(start_date, end_date)
+
             else:
-                output_final['Period of employment'] = sal_peroid
-    except:
-        print("Error")
+                print("Length of date is out of range. It should be of 8 characters.")
+
+
+###############################################################################################################
+
+
+
+        else:
+            output_final['Period of employment'] = sal_period
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    ''' this particular code was commented 
+    # 
+    # try:
+    # 
+    #     for salary_peroid in sal_peroid:
+    #         if str(salary_peroid) == 'nan':
+    # 
+    #             p_val = output_final["Salary/Wages"].apply(lambda x: str(x).split()[0]) + " to " + output_final[
+    #                 "Salary/Wages"].apply(lambda x: str(x).split()[2])
+    #             output_final['Period of employment'] = output_final[
+    #                 'Period of employment'].fillna(p_val)
+    # 
+    #             # ******************************************
+    # 
+    #             # function for checking date and time format
+    #             if output_final['Period of employment'].fillna(p_val):
+    #                 A = string_taken(output_final['Period of employment'])
+    #                 output_final['Period of employment'] = A
+    # 
+    # 
+    #         else:
+    #             output_final['Period of employment'] = sal_peroid
+    # 
+    # 
+    # except:
+    #     print("Error")
+    
+    '''
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
     if output_final["Salary/Wages"] is not None:
@@ -181,13 +271,12 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
 
     output_final["Total income"] = output_final["Total income"].apply(lambda x: str(x).replace("*", ""))
 
-
-
     if output_final['Nature 2'] is not None:
 
         nature2 = output_final['Nature 2'].to_string()
         if nature2 is not None:
-            nature2_amount = output_final['Nature 2'].apply(lambda x: str(x).split()[-1]if (str(x) != 'nan') else str(''))
+            nature2_amount = output_final['Nature 2'].apply(
+                lambda x: str(x).split()[-1] if (str(x) != 'nan') else str(''))
             output_final['Nature 2'] = nature2_amount
 
     if output_final['Nature 3'] is not None:
@@ -200,7 +289,6 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
 
     output_final['Pensions'] = ""
 
-
     output_final["Payments that have not been declared above but which will be made"] = ''
 
     output_final["Particulars of Place of Residence provided:"] = output_final[
@@ -210,7 +298,7 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
         "Particulars of Place of Residence provided:"].apply(lambda x: str(x).replace("*", ""))
 
     output_final["Address Place of residence provided 1"] = output_final["Address Place of residence provided 1"].apply(
-        lambda x: str(x).upper().lstrip() if (str(x) != 'nan')else str(''))
+        lambda x: str(x).upper().lstrip() if (str(x) != 'nan') else str(''))
     try:
         addrees_nature = output_final["Nature_1"].astype(str).apply(
             lambda x: str(x).split("period")[0] if ("period" in str(x)) else str(x))
@@ -219,7 +307,7 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
     except:
         output_final["Nature_1"] = ""
 
-    output_final["Period 1"] =output_final['Period of employment']
+    output_final["Period 1"] = output_final['Period of employment']
 
     output_final['Rent paid by employer 1'] = output_final[
         'Rent paid by employer 1'].astype(str).apply(
@@ -274,7 +362,7 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
         'Amount paid overseas non-Hong Kong company'].astype(str).apply(
         lambda x: str(x).replace(": hk$", "").replace("nan", "") if (", " or "nan" in str(x)) else str(x))
 
-    output_final['Future Postal address'] =''
+    output_final['Future Postal address'] = ''
 
     output_final['Tax borne'] = ""
     output_final['Money withheld amount'] = ""
@@ -301,3 +389,28 @@ def customDataCleaningForIR56B(workflow_Excel_path, cwd):
     # print("Generate output excel to ", output_path)
     # output_final.to_excel(output_path, index=False)
     return output_final
+
+##################################################################################
+#new logic added here ##########################################################
+
+# function for converting the date in proper date time format
+def string_taken(str1, str2):
+    year_taken_1 = str1[4:]  # 2019
+    year_taken_2 = str2[4:]  # 2019
+
+    iterate_1 = iter(str1[0:4])  # 0,1,0,4
+    iterate_2 = iter(str2[0:4])  # 3,1,0,3
+
+    slash_join_1 = '/'.join(a + b for a, b in zip(iterate_1, iterate_1))  #
+    slash_join_2 = '/'.join(a + b for a, b in zip(iterate_2, iterate_2))
+
+    full_date_1 = slash_join_1 + '/' + year_taken_1
+    full_date_2 = slash_join_2 + '/' + year_taken_2
+
+
+    return full_date_1 + ' to ' + full_date_2
+
+
+
+#function calling
+# print(customDataCleaningForIR56B(workflow_Excel_path, cwd))
