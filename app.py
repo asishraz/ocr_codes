@@ -17,7 +17,8 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# route and function to handle the home page
+
+#route and fucntion to handle the root url
 @app.route('/')
 def home_page():
     return render_template('index.html')
@@ -44,8 +45,16 @@ def upload_page():
                                    msg='Successfully processed',
                                    extracted_text=extracted_text,
                                    img_src=UPLOAD_FOLDER + file.filename)
+            
     elif request.method == 'GET':
         return render_template('upload.html')
 
 if __name__ == '__main__':
     app.run()
+
+
+#render_template function 
+# return render_template('upload.html',
+#                                    msg='Successfully processed',
+#                                    extracted_text=extracted_text,
+#                                    img_src=UPLOAD_FOLDER + file.filename)
